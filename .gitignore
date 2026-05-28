@@ -1,0 +1,23 @@
+# Dependencies & build
+web/node_modules/
+web/dist/
+
+# Env & OS
+.env
+.env.*
+.DS_Store
+Thumbs.db
+
+# Archives & backups
+*.7z
+*.zip
+site_backup/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
