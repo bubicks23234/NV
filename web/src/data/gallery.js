@@ -10,3 +10,12 @@ export const GALLERY = [
   { src: '/images/cam8.jpg', title: 'Благоустройство территорий', tag: 'Благоустройство' },
   { src: '/images/cam9.jpg', title: 'Инфраструктура и парковки', tag: 'Инфраструктура' },
 ];
+
+export const GALLERY_FEATURED = {
+  src: '/images/kindergarten.jpg',
+  title: 'Восстановление здания яслей-сада № 16',
+  tag: 'Реставрация',
+  description: 'Восстановление и реконструкция здания дошкольного учреждения.',
+};
+
+export const GALLERY_ALL = [...GALLERY, GALLERY_FEATURED];

@@ -2,7 +2,7 @@ import { createSignal, onMount, For, Show } from 'solid-js';
 import { reveal } from './directives/reveal';
 import { heroParallax } from './directives/parallax';
 import { SectionAtmosphere } from './components/SectionAtmosphere';
-import { GALLERY } from './data/gallery';
+import { GALLERY, GALLERY_ALL, GALLERY_FEATURED } from './data/gallery';
 import { FormField } from './components/FormField';
 import { ContactCopyRow } from './components/ContactCopyRow';
 import { PhoneField } from './components/PhoneField';
@@ -25,6 +25,7 @@ import './index.css';
 const NAV = [
   { href: '#about', label: 'О компании' },
   { href: '#services', label: 'Услуги' },
+  { href: '#houses', label: 'Частные дома' },
   { href: '#gallery', label: 'Галерея' },
   { href: '#contact', label: 'Контакты' },
 ];
@@ -145,7 +146,7 @@ export default function App() {
       <Lightbox
         open={lightboxOpen}
         index={lightboxIndex}
-        items={() => GALLERY}
+        items={() => GALLERY_ALL}
         onChange={setLightboxIndex}
         onClose={() => setLightboxOpen(false)}
       />
@@ -216,35 +217,71 @@ export default function App() {
           </div>
         </section>
 
-        <section id="services" class="section section--muted section--layered">
-          <SectionAtmosphere tone="muted" streetSide="right" />
-          <div class="container-narrow section__inner">
-            <SectionHeader
-              eyebrow="Услуги"
-              title="Комплекс проектных решений"
-              description="Проектирование зданий, архитектура и инжиниринговая экспертиза для девелоперов и застройщиков в Донецке."
-            />
+        <div class="section-group section-group--muted section-group--layered">
+          <SectionAtmosphere
+            tone="muted"
+            streets={[
+              { side: 'right', scope: 'upper' },
+              { side: 'left', src: '/images/street3D3.png', lower: true, compact: true, scope: 'lower' },
+            ]}
+          />
 
-            <div class="services-list">
-              <For each={SERVICES}>
-                {(service, i) => (
-                  <article use:reveal={{ variant: 'left', delay: i() * 100 }} class="service-row">
-                    <span class="service-row__num" data-num={service.num}>
-                      {service.num}
-                    </span>
-                    <div class="service-row__icon">
-                      <ServiceIcon name={service.icon} />
-                    </div>
-                    <div class="service-row__body">
-                      <h3 class="service-row__title">{service.title}</h3>
-                      <p class="service-row__text">{service.text}</p>
-                    </div>
-                  </article>
-                )}
-              </For>
+          <section id="services" class="section section--in-group scroll-mt-20">
+            <div class="container-narrow section__inner section__inner--group-top">
+              <SectionHeader
+                eyebrow="Услуги"
+                title="Комплекс проектных решений"
+                description="Проектирование зданий, архитектура и инжиниринговая экспертиза для девелоперов и застройщиков в Донецке."
+              />
+
+              <div class="services-list">
+                <For each={SERVICES}>
+                  {(service, i) => (
+                    <article use:reveal={{ variant: 'left', delay: i() * 100 }} class="service-row">
+                      <span class="service-row__num" data-num={service.num}>
+                        {service.num}
+                      </span>
+                      <div class="service-row__icon">
+                        <ServiceIcon name={service.icon} />
+                      </div>
+                      <div class="service-row__body">
+                        <h3 class="service-row__title">{service.title}</h3>
+                        <p class="service-row__text">{service.text}</p>
+                      </div>
+                    </article>
+                  )}
+                </For>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+
+          <section id="houses" class="section section--in-group scroll-mt-20">
+            <div class="container-narrow section__inner section__inner--group-bottom">
+              <div class="houses-grid">
+                <div use:reveal={{ variant: 'left' }} class="houses-grid__text">
+                  <SectionHeader
+                    reveal={false}
+                    align="left"
+                    eyebrow="Частное строительство"
+                    title="Проектирование индивидуальных жилых домов"
+                    description="Архитектурные решения для частных заказчиков — от эскиза до рабочей документации с учётом участка, бюджета и ваших пожеланий."
+                  />
+                  <p class="text-slate-600 leading-relaxed mt-6">
+                    Проектируем дома любой сложности: коттеджи, таунхаусы, загородные резиденции. Планировки,
+                    фасады, инженерные системы и согласование документации — всё в одном месте.
+                  </p>
+                  <a href="#contact" class="houses-grid__cta">
+                    Обсудить проект дома
+                  </a>
+                </div>
+
+                <div use:reveal={{ variant: 'right', delay: 100 }} class="houses-grid__visual">
+                  <img src="/images/house.jpg" alt="Индивидуальный жилой дом — пример проекта" loading="lazy" />
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
 
         <section id="gallery" class="section section--white section--layered scroll-mt-20 gallery-section">
           <SectionAtmosphere tone="light" />
@@ -255,10 +292,15 @@ export default function App() {
                 <h2 class="heading-lg gallery-section__title">Галерея проектов</h2>
               </div>
               <p class="gallery-section__meta">
-                {GALLERY.length} объектов · нажмите для просмотра
+                {GALLERY_ALL.length} объектов · нажмите для просмотра
               </p>
             </div>
-            <Gallery items={GALLERY} onOpen={openLightbox} />
+            <Gallery
+              items={GALLERY}
+              featured={GALLERY_FEATURED}
+              featuredIndex={GALLERY.length}
+              onOpen={openLightbox}
+            />
           </div>
         </section>
 
