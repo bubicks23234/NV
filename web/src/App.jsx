@@ -166,10 +166,6 @@ export default function App() {
           <div class="hero-section__grid container-narrow">
             <HeroContent onNavigate={closeMenu} />
           </div>
-
-          <a href="#about" class="hero-scroll-hint hero-scroll-hint--animate" aria-label="Прокрутить вниз">
-            <UiIcon name="arrowDown" class="w-6 h-6" />
-          </a>
         </section>
 
         <section id="about" class="section section--white section--layered">
@@ -211,7 +207,7 @@ export default function App() {
                 onClick={() => openLightbox(0)}
               >
                 <img src="/images/cam7.jpg" alt="Пример проекта" loading="lazy" />
-                <span class="about-grid__preview-label">Смотреть проекты →</span>
+                <span class="about-grid__preview-label">Смотреть проекты</span>
               </button>
             </div>
           </div>
