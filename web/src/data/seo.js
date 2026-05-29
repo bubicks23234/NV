@@ -1,7 +1,8 @@
 /** SEO-константы сайта (Яндекс, Open Graph, Schema.org) */
 export const SITE = {
   /** Основной домен сайта — без GitHub Pages */
-  url: 'https://novye-tehnologii.ru/',  name: 'ООО «НОВЫЕ ТЕХНОЛОГИИ»',
+  url: 'https://novye-tehnologii.ru/',
+  name: 'ООО «НОВЫЕ ТЕХНОЛОГИИ»',
   shortName: 'Новые технологии',
   title: 'ООО «Новые технологии» — проектирование и инжиниринг в Донецке',
   description:

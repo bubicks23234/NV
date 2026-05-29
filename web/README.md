@@ -29,4 +29,4 @@ npm run deploy
 - `src/App.jsx` — главная страница
 - `src/data/seo.js` — SEO-константы (домен, контакты)
 - `public/images/` — фото проектов и логотип
-- `vite.config.js` — `base: '/NV/'` для production (GitHub Pages)
+- `vite.config.js` — `base: '/'` для Render; для GitHub Pages: `npm run deploy` (`VITE_BASE=/NV/`)
