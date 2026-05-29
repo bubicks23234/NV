@@ -71,6 +71,12 @@ export function Lightbox(props) {
           onClick={(e) => e.target === e.currentTarget && props.onClose()}
         >
           <div class="lightbox-top">
+            <div class="lightbox-top__text">
+              <p class="text-sm font-semibold truncate">{item()?.title}</p>
+              <p class="text-xs text-white/60">
+                {index() + 1} / {total()}
+              </p>
+            </div>
             <button
               type="button"
               class="lightbox-btn lightbox-btn--close"
@@ -82,13 +88,6 @@ export function Lightbox(props) {
             >
               <UiIcon name="x" class="w-6 h-6" />
             </button>
-            <div class="lightbox-top__text">
-              <p class="text-sm font-semibold truncate">{item()?.title}</p>
-              <p class="text-xs text-white/60">
-                {index() + 1} / {total()}
-              </p>
-            </div>
-            <span class="lightbox-top__spacer" aria-hidden="true" />
           </div>
 
           <div
@@ -126,14 +125,6 @@ export function Lightbox(props) {
             <div class="lightbox-bottom__nav sm:hidden">
               <button type="button" class="lightbox-btn" aria-label="Назад" onClick={() => go(-1)}>
                 <UiIcon name="chevronLeft" class="w-6 h-6" />
-              </button>
-              <button
-                type="button"
-                class="lightbox-btn lightbox-btn--close-mobile"
-                aria-label="Закрыть"
-                onClick={props.onClose}
-              >
-                <UiIcon name="x" class="w-6 h-6" />
               </button>
               <button type="button" class="lightbox-btn" aria-label="Вперёд" onClick={() => go(1)}>
                 <UiIcon name="chevronRight" class="w-6 h-6" />
