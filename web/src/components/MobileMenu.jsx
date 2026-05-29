@@ -17,7 +17,7 @@ export function MobileMenu(props) {
       <Transition name="fs-backdrop">
         <Show when={props.open()}>
           <div
-            class="mobile-menu-backdrop md:hidden fixed inset-0 z-[70]"
+            class="mobile-menu-backdrop md:hidden fixed inset-0 z-[600]"
             onClick={props.onClose}
           />
         </Show>
@@ -25,7 +25,7 @@ export function MobileMenu(props) {
 
       <Transition name="fs-panel" onAfterExit={unlockScroll}>
         <Show when={props.open()}>
-          <nav class="mobile-menu-panel md:hidden fixed inset-0 z-[71] flex flex-col" aria-label="Мобильная навигация">
+          <nav class="mobile-menu-panel md:hidden fixed inset-0 z-[601] flex flex-col" aria-label="Мобильная навигация">
             <div class="mobile-menu-panel__inner">
               <div class="mobile-menu-panel__accent" aria-hidden="true" />
 

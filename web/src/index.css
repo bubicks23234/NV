@@ -89,9 +89,10 @@
 
   /* Scroll progress — над шапкой */
   .scroll-progress {
-    @apply fixed inset-x-0 top-0 z-[60] h-1 pointer-events-none accent-line;
+    @apply absolute inset-x-0 top-0 h-1 pointer-events-none accent-line;
     transform-origin: left center;
     will-change: transform;
+    z-index: 2;
   }
 
   .scroll-progress--hidden {
@@ -99,18 +100,51 @@
     transition: none;
   }
 
+  /* Фиксированная шапка поверх контента (iOS + transform у секций) */
+  .site-chrome {
+    @apply fixed inset-x-0 top-0 z-[500] pointer-events-none;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  .site-chrome .site-header,
+  .site-chrome .scroll-progress {
+    pointer-events: auto;
+  }
+
   /* Header */
   .site-header {
-    @apply bg-white/90 backdrop-blur-xl border-b border-slate-200/80;
+    @apply relative w-full bg-white border-b border-slate-200/80;
     padding-top: env(safe-area-inset-top);
     transition:
       background-color 0.4s ease,
-      box-shadow 0.4s ease,
-      opacity 0.25s ease;
+      box-shadow 0.4s ease;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+
+  @media (max-width: 767px) {
+    .site-header {
+      @apply bg-white shadow-sm;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .site-header {
+      @apply bg-white/90 backdrop-blur-xl;
+    }
   }
 
   .site-header--scrolled {
-    @apply shadow-md bg-white/95;
+    @apply shadow-md;
+  }
+
+  @media (min-width: 768px) {
+    .site-header--scrolled {
+      @apply bg-white/95;
+    }
   }
 
   .site-header--hidden {
@@ -400,9 +434,15 @@
     @apply mt-3 text-xs text-slate-500 leading-relaxed;
   }
 
+  main {
+    @apply relative;
+    z-index: 0;
+  }
+
   /* Sections */
   .section {
     @apply relative scroll-mt-20;
+    z-index: 0;
   }
 
   .section--white {
@@ -428,12 +468,15 @@
   /* Layered sections (atmosphere + content) */
   .section--layered {
     @apply relative overflow-hidden;
+    z-index: 0;
+    isolation: isolate;
   }
 
   .section--layered > .section__inner,
   .section--layered > .container-narrow,
   .section--layered > .gallery-section__inner {
-    @apply relative z-[1];
+    @apply relative;
+    z-index: 1;
   }
 
   .section-atmosphere {
@@ -609,6 +652,7 @@
   /* Hero */
   .hero-section {
     @apply relative min-h-[100svh] flex items-center overflow-hidden;
+    z-index: 0;
   }
 
   .hero-section__bg {

@@ -99,11 +99,12 @@ export default function App() {
 
   return (
     <div class="min-h-screen font-sans">
-      <ScrollProgress progress={scrollProgress()} hidden={menuOpen() || lightboxOpen()} />
+      <div class="site-chrome">
+        <ScrollProgress progress={scrollProgress()} hidden={menuOpen() || lightboxOpen()} />
 
-      <header
-        class={`site-header fixed inset-x-0 top-0 z-50 ${scrolled() ? 'site-header--scrolled' : ''}`}
-      >
+        <header
+          class={`site-header ${scrolled() ? 'site-header--scrolled' : ''}`}
+        >
         <div class="site-header__inner container-narrow">
           <a href="#" class="site-header__brand">
             <Logo variant="header" />
@@ -136,6 +137,7 @@ export default function App() {
           </button>
         </div>
       </header>
+      </div>
 
       <MobileMenu open={menuOpen} onClose={closeMenu} items={NAV} />
 
