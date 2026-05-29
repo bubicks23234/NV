@@ -99,7 +99,7 @@ export default function App() {
 
   return (
     <div class="min-h-screen font-sans">
-      <div class="site-chrome">
+      <div class={`site-chrome ${lightboxOpen() ? 'site-chrome--hidden' : ''}`}>
         <ScrollProgress progress={scrollProgress()} hidden={menuOpen() || lightboxOpen()} />
 
         <header

@@ -70,6 +70,15 @@ export function Lightbox(props) {
           aria-label="Просмотр изображения"
           onClick={(e) => e.target === e.currentTarget && props.onClose()}
         >
+          <button
+            type="button"
+            class="lightbox-close-fab"
+            aria-label="Закрыть просмотр"
+            onClick={props.onClose}
+          >
+            <UiIcon name="x" class="w-6 h-6" />
+          </button>
+
           <div class="lightbox-top">
             <div class="lightbox-top__text">
               <p class="text-sm font-semibold truncate">{item()?.title}</p>
