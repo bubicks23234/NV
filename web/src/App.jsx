@@ -87,6 +87,7 @@ export default function App() {
 
   const closeMenu = () => setMenuOpen(false);
   const openLightbox = (i) => {
+    setMenuOpen(false);
     setLightboxIndex(i);
     setLightboxOpen(true);
   };
@@ -99,12 +100,11 @@ export default function App() {
 
   return (
     <div class="min-h-screen font-sans">
-      <div class={`site-chrome ${lightboxOpen() ? 'site-chrome--hidden' : ''}`}>
-        <ScrollProgress progress={scrollProgress()} hidden={menuOpen() || lightboxOpen()} />
+      <Show when={!lightboxOpen()}>
+        <div class="site-chrome">
+          <ScrollProgress progress={scrollProgress()} hidden={menuOpen()} />
 
-        <header
-          class={`site-header ${scrolled() ? 'site-header--scrolled' : ''}`}
-        >
+          <header class={`site-header ${scrolled() ? 'site-header--scrolled' : ''}`}>
         <div class="site-header__inner container-narrow">
           <a href="#" class="site-header__brand">
             <Logo variant="header" />
@@ -136,8 +136,9 @@ export default function App() {
             <span class="burger__line" />
           </button>
         </div>
-      </header>
-      </div>
+          </header>
+        </div>
+      </Show>
 
       <MobileMenu open={menuOpen} onClose={closeMenu} items={NAV} />
 
