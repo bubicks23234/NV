@@ -9,7 +9,7 @@ services:
       - key: NODE_VERSION
         value: 20
       - key: VITE_NV_BOT_API_URL
-        sync: false
+        value: https://nv-bot-production.up.railway.app
       - key: VITE_NV_BOT_API_KEY
         value: nv-nt-donetsk-2026
     routes:
