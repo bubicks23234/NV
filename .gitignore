@@ -1,10 +1,15 @@
 # Dependencies & build
 web/node_modules/
 web/dist/
+backend/.venv/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/static/site/
 
 # Env & OS
 .env
 .env.*
+!.env.example
 .DS_Store
 Thumbs.db
 

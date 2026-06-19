@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Заявки · Новые Технологии</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <section id="screen-login" class="screen">
+      <div class="card login-card">
+        <p class="eyebrow">Новые Технологии</p>
+        <h1>Панель заявок</h1>
+        <p class="muted">Доступ только для администратора</p>
+        <form id="login-form" class="stack">
+          <label class="field">
+            <span>Пароль</span>
+            <input id="password" type="password" autocomplete="current-password" required />
+          </label>
+          <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+        <p id="login-error" class="error hidden"></p>
+      </div>
+    </section>
+
+    <section id="screen-app" class="screen hidden">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Mini App</p>
+          <h2>Заявки с сайта</h2>
+        </div>
+        <button id="btn-settings" class="icon-btn" type="button" aria-label="Настройки">⚙️</button>
+      </header>
+
+      <div id="stats" class="stats"></div>
+      <div id="leads" class="leads"></div>
+    </section>
+
+    <section id="screen-settings" class="screen hidden">
+      <header class="topbar">
+        <button id="btn-back" class="text-btn" type="button">← Назад</button>
+        <h2>Настройки</h2>
+      </header>
+      <div class="card settings-card">
+        <label class="toggle-row">
+          <div>
+            <strong>AI-ассистент</strong>
+            <p class="muted">Анализ заявок и варианты ответов (DeepSeek + DuckDuckGo)</p>
+          </div>
+          <input id="ai-toggle" type="checkbox" />
+        </label>
+        <button id="btn-logout" class="btn btn-ghost" type="button">Выйти</button>
+      </div>
+    </section>
+  </div>
+
+  <dialog id="lead-dialog" class="lead-dialog">
+    <form method="dialog" class="lead-dialog__inner">
+      <header class="lead-dialog__head">
+        <h3 id="lead-title">Заявка</h3>
+        <button class="icon-btn" value="cancel" aria-label="Закрыть">✕</button>
+      </header>
+      <div id="lead-body" class="lead-dialog__body"></div>
+    </form>
+  </dialog>
+
+  <script src="./app.js"></script>
+</body>
+</html>
