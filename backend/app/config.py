@@ -11,14 +11,10 @@ class Settings(BaseSettings):
     webapp_url: str = ""
 
     admin_password: str = "change-me"
-    jwt_secret: str = "change-me-jwt-secret"
-    jwt_ttl_hours: int = 72
 
     telegram_bot_token: str = ""
     telegram_bot_username: str = "novtechnologybot"
     admin_telegram_ids: str = ""
-    # webhook (по умолчанию) или polling (если webhook не поднимается)
-    telegram_mode: str = "webhook"
 
     deepseek_api_key: str = ""
     deepseek_base_url: str = "https://api.deepseek.com"
@@ -32,6 +28,9 @@ class Settings(BaseSettings):
     # HTTP(S) прокси для Telegram API и внешних запросов (обязателен для бота)
     # Формат: http://user:pass@host:port
     proxy_url: str = ""
+
+    # Поиск DuckDuckGo замедляет ответ — по умолчанию выключен
+    ai_web_search: bool = False
 
     @property
     def proxy_enabled(self) -> bool:
@@ -48,11 +47,6 @@ class Settings(BaseSettings):
         if not self.admin_telegram_ids.strip():
             return []
         return [int(x.strip()) for x in self.admin_telegram_ids.split(",") if x.strip()]
-
-    @property
-    def miniapp_url(self) -> str:
-        base = self.webapp_url.rstrip("/") if self.webapp_url else self.public_site_url.rstrip("/")
-        return f"{base}/miniapp/"
 
 
 @lru_cache

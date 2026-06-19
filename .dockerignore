@@ -11,5 +11,8 @@ docx/
 site/
 *.7z
 *.zip
+*.docx
 .env
 .env.*
+doc.txt
+logo.png

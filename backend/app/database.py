@@ -36,6 +36,14 @@ def init_db() -> None:
                 key TEXT PRIMARY KEY,
                 value TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS bot_users (
+                chat_id INTEGER PRIMARY KEY,
+                username TEXT,
+                authorized INTEGER NOT NULL DEFAULT 0,
+                awaiting_password INTEGER NOT NULL DEFAULT 0,
+                authorized_at TEXT
+            );
             """
         )
         row = conn.execute("SELECT value FROM settings WHERE key = 'ai_assistant_enabled'").fetchone()
@@ -124,6 +132,73 @@ def update_lead_status(lead_id: int, status: str) -> dict[str, Any] | None:
         )
         row = conn.execute("SELECT * FROM leads WHERE id = ?", (lead_id,)).fetchone()
     return dict(row) if row else None
+
+
+def _ensure_bot_user(conn, chat_id: int, username: str | None = None) -> None:
+    conn.execute(
+        """
+        INSERT INTO bot_users (chat_id, username, authorized, awaiting_password)
+        VALUES (?, ?, 0, 0)
+        ON CONFLICT(chat_id) DO UPDATE SET username = COALESCE(excluded.username, bot_users.username)
+        """,
+        (chat_id, username),
+    )
+
+
+def is_authorized(chat_id: int) -> bool:
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT authorized FROM bot_users WHERE chat_id = ?",
+            (chat_id,),
+        ).fetchone()
+    return bool(row and row["authorized"])
+
+
+def is_awaiting_password(chat_id: int) -> bool:
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT awaiting_password FROM bot_users WHERE chat_id = ?",
+            (chat_id,),
+        ).fetchone()
+    return bool(row and row["awaiting_password"])
+
+
+def set_awaiting_password(chat_id: int, username: str | None, awaiting: bool) -> None:
+    with connect() as conn:
+        _ensure_bot_user(conn, chat_id, username)
+        conn.execute(
+            "UPDATE bot_users SET awaiting_password = ?, username = COALESCE(?, username) WHERE chat_id = ?",
+            (1 if awaiting else 0, username, chat_id),
+        )
+
+
+def authorize_user(chat_id: int, username: str | None = None) -> None:
+    with connect() as conn:
+        _ensure_bot_user(conn, chat_id, username)
+        conn.execute(
+            """
+            UPDATE bot_users
+            SET authorized = 1, awaiting_password = 0, authorized_at = ?, username = COALESCE(?, username)
+            WHERE chat_id = ?
+            """,
+            (utc_now(), username, chat_id),
+        )
+
+
+def deauthorize_user(chat_id: int) -> None:
+    with connect() as conn:
+        conn.execute(
+            "UPDATE bot_users SET authorized = 0, awaiting_password = 0 WHERE chat_id = ?",
+            (chat_id,),
+        )
+
+
+def list_authorized_chat_ids() -> list[int]:
+    with connect() as conn:
+        rows = conn.execute(
+            "SELECT chat_id FROM bot_users WHERE authorized = 1 ORDER BY chat_id",
+        ).fetchall()
+    return [int(row["chat_id"]) for row in rows]
 
 
 def serialize_lead(row: dict[str, Any]) -> dict[str, Any]:

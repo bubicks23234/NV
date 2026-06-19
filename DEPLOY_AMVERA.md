@@ -1,73 +1,79 @@
-# Деплой на Amvera
+# Деплой на Amvera (сайт + Telegram-бот)
 
-## 1. Webhook GitHub → Amvera
+Один Docker-контейнер отдаёт сайт, API и webhook бота.
 
-В настройках репозитория GitHub (`bubicks23234/NV`) → **Webhooks** → **Add webhook**:
+```
+https://ваш-домен.amvera.app/
+├── /                    → лендинг
+├── /api/leads           → форма заявок
+├── /api/health          → проверка
+└── /telegram/webhook    → Telegram Bot API
+```
+
+## 1. Push кода
+
+```bash
+git push amvera main
+# или GitHub → webhook Amvera:
+git push origin main
+```
+
+Файлы: `Dockerfile`, `amvera.yaml` (порт **8000**, диск **/data**).
+
+## 2. Проект в Amvera
+
+1. [console.amvera.ru](https://console.amvera.ru) → проект `novyetehnologii`
+2. **Репозиторий** — ветка `main`
+3. **Хранилище** — постоянный диск, путь `/data`
+4. **Конфигурация** — Docker, `containerPort: 8000`
+
+## 3. Переменные окружения
+
+| Переменная | Описание |
+|------------|----------|
+| `WEBAPP_URL` | `https://ваш-проект.amvera.app` (без `/` в конце) |
+| `ADMIN_PASSWORD` | пароль входа в бота |
+| `TELEGRAM_BOT_TOKEN` | токен @novtechnologybot |
+| `ADMIN_TELEGRAM_IDS` | Telegram ID админа (через @userinfobot) |
+| `PROXY_URL` | `http://user:pass@host:port` — обязателен для Telegram из РФ |
+| `DEEPSEEK_API_KEY` | ключ DeepSeek |
+| `DATA_DIR` | `/data` |
+| `AI_WEB_SEARCH` | `false` |
+| `CORS_ORIGINS` | `*` |
+
+После добавления переменных — **перезапустите** контейнер.
+
+`WEBAPP_URL` нужен для webhook: при старте бот вызовет  
+`https://ваш-домен/telegram/webhook`.
+
+## 4. GitHub webhook (опционально)
 
 | Поле | Значение |
 |------|----------|
-| Payload URL | URL из панели Amvera → «Ручная настройка» |
+| Payload URL | URL из вкладки «Репозиторий» Amvera |
 | Content type | `application/json` |
-| Secret | секрет из поля «Секрет» в Amvera |
-| Events | Just the push event |
+| Secret | секрет из Amvera |
+| Events | Push |
 
-В панели Amvera на вкладке **Репозиторий** подключите GitHub и укажите ветку `main`.
+## 5. Проверка
 
-## 2. Переменные окружения в Amvera
+1. `https://ваш-домен/api/health` → `{"ok": true, "bot": true}`
+2. Сайт открывается, форма отправляет заявку
+3. @novtechnologybot → `/start` → пароль → меню заявок
 
-Задайте в разделе **Переменные** (см. `.env.example`):
+В логах: `Telegram webhook set: https://...`
 
-- `WEBAPP_URL` — URL вашего приложения на Amvera
-- `ADMIN_PASSWORD` — пароль для Mini App
-- `JWT_SECRET` — случайная строка
-- `TELEGRAM_BOT_TOKEN` — токен бота
-- `ADMIN_TELEGRAM_IDS` — Telegram ID заказчика
-- `PROXY_URL` — **обязательный** HTTP-прокси для Telegram API (`http://user:pass@host:port`)
-- `DEEPSEEK_API_KEY` — ключ DeepSeek
+## 6. Важно
 
-**Не храните секреты в репозитории.**
+- **Не запускайте** `run_polling.py` на сервере и локально одновременно с webhook — будет конфликт 409.
+- Заявки хранятся в SQLite на диске `/data` — без монтирования тома данные пропадут при пересборке.
+- Свой домен: Amvera → «Домены» → обновите `WEBAPP_URL` → перезапуск.
 
-## 3. Telegram Bot + Mini App
+## Бот
 
-1. Откройте [@BotFather](https://t.me/BotFather) → `/mybots` → @novtechnologybot
-2. **Bot Settings → Menu Button** или команда `/setmenubutton`:
-   - URL: `https://ВАШ-ДОМЕН.amvera.ru/miniapp/`
-3. Отправьте боту `/start` — появится кнопка «Заявки»
-4. Узнайте свой Telegram ID через [@userinfobot](https://t.me/userinfobot) и добавьте в `ADMIN_TELEGRAM_IDS`
-
-## 4. Архитектура
-
-```
-Сайт (Solid) ──POST /api/leads──► FastAPI
-                                      ├── SQLite (/data)
-                                      ├── DeepSeek + DuckDuckGo (AI)
-                                      └── Telegram уведомления
-
-Mini App (/miniapp/) ──JWT + пароль──► /api/admin/*
-```
-
-## 5. Локальный запуск
-
-```bash
-# Backend
-cd backend
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp ../.env.example ../.env   # заполните значения
-export $(grep -v '^#' ../.env | xargs)
-uvicorn app.main:app --reload --port 8000
-
-# Frontend (отдельно)
-cd web
-VITE_API_BASE=http://127.0.0.1:8000 npm run dev
-```
-
-## 6. Сборка Docker (как на Amvera)
-
-```bash
-docker build -t nv-site .
-docker run -p 8000:8000 --env-file .env -v nv-data:/data nv-site
-```
-
-Сайт: `http://localhost:8000`  
-Mini App: `http://localhost:8000/miniapp/`
+Нативный Telegram Bot API (без Mini App):
+- `/start` — вход по паролю в чате
+- `/leads` — заявки
+- `/settings` — AI вкл/выкл
+- `/logout` — выход
+- inline-кнопки: статусы, AI-подсказки, копирование ответов

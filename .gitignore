@@ -10,7 +10,6 @@ backend/static/site/
 .env
 .env.*
 !.env.example
-*.env.local
 .DS_Store
 Thumbs.db
 
@@ -18,6 +17,13 @@ Thumbs.db
 *.7z
 *.zip
 site_backup/
+site/
+image/
+docx/
+*.docx
+doc.txt
+logo.png
+Documentation*.txt
 
 # IDE
 .idea/
