@@ -1,10 +1,16 @@
-name: вымыв
-tariffId: "5"
-meta:
-  environment: docker
-  toolchain:
-    name: docker
+# Статический сайт (Solid.js + Vite) — только фронтенд.
+# Бэкенд и Telegram-бот деплоятся отдельно на Render (см. DEPLOY.md).
+#
+# В панели Amvera задайте переменную окружения для сборки:
+#   VITE_API_BASE=https://ваш-бэкенд.onrender.com
 
-run:
-  containerPort: 8000
-  persistenceMount: /data
+meta:
+  environment: node
+  toolchain:
+    name: browser
+    version: "20"
+
+build:
+  additionalCommands: sh -c "cd web && npm install && npm run build"
+  artifacts:
+    "web/dist/*": /

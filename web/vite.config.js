@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
 import { seoPlugin } from './vite-seo-plugin.js';
 
+const devApiTarget = process.env.VITE_DEV_API || 'http://localhost:8010';
+
 export default defineConfig(({ mode }) => ({
   plugins: [solid(), seoPlugin()],
   // По умолчанию `/` — для Render и обычного хостинга.
@@ -9,5 +11,13 @@ export default defineConfig(({ mode }) => ({
   base: process.env.VITE_BASE || '/',
   build: {
     target: 'esnext',
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: devApiTarget,
+        changeOrigin: true,
+      },
+    },
   },
 }));

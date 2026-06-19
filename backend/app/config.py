@@ -25,8 +25,8 @@ class Settings(BaseSettings):
 
     cors_origins: str = "*"
 
-    # HTTP(S) прокси для Telegram API и внешних запросов (обязателен для бота)
-    # Формат: http://user:pass@host:port
+    # HTTP(S) прокси — только если бэкенд на российском хостинге (Amvera РФ).
+    # На Render не нужен. Формат: http://user:pass@host:port
     proxy_url: str = ""
 
     # Поиск DuckDuckGo замедляет ответ — по умолчанию выключен
