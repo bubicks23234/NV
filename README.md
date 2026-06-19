@@ -9,7 +9,7 @@
 | `web/` | Фронтенд (Solid.js + Vite + Tailwind) |
 | `backend/` | FastAPI: API, SQLite, DeepSeek AI, Telegram-бот |
 | `Dockerfile` | Один образ: сайт + API + webhook бота |
-| `amvera.yaml` | Порт 8000, хранилище `/data` |
+| `amvera.yml` | Порт 8000, хранилище `/data`, тариф Amvera |
 
 ## Локально
 

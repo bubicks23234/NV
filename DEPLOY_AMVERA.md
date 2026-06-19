@@ -18,7 +18,7 @@ git push amvera main
 git push origin main
 ```
 
-Файлы: `Dockerfile`, `amvera.yaml` (порт **8000**, диск **/data**).
+Файлы: `Dockerfile`, `amvera.yml` (порт **8000**, диск **/data**).
 
 ## 2. Проект в Amvera
 

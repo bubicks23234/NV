@@ -1,5 +1,9 @@
+name: вымыв
+tariffId: "5"
 meta:
   environment: docker
+  toolchain:
+    name: docker
 
 run:
   containerPort: 8000
