@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     telegram_bot_token: str = ""
     telegram_bot_username: str = "novtechnologybot"
     admin_telegram_ids: str = ""
+    # webhook (по умолчанию) или polling (если webhook не поднимается)
+    telegram_mode: str = "webhook"
 
     deepseek_api_key: str = ""
     deepseek_base_url: str = "https://api.deepseek.com"

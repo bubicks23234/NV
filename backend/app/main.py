@@ -1,3 +1,5 @@
+import asyncio
+import contextlib
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -31,10 +33,40 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_SITE = BASE_DIR / "static" / "site"
 MINIAPP_DIR = BASE_DIR / "static" / "miniapp"
 telegram = TelegramService()
+_polling_task: asyncio.Task | None = None
+
+
+async def _start_telegram(settings) -> None:
+    global _polling_task
+    if not telegram.enabled:
+        logger.warning("TELEGRAM_BOT_TOKEN не задан — бот отключён")
+        return
+
+    use_polling = settings.telegram_mode.strip().lower() == "polling"
+
+    if use_polling:
+        await telegram.delete_webhook()
+        _polling_task = asyncio.create_task(telegram.polling_loop())
+        logger.info("Telegram mode: polling")
+        return
+
+    if settings.webapp_url:
+        webhook_url = f"{settings.webapp_url.rstrip('/')}/telegram/webhook"
+        try:
+            await telegram.set_webhook(webhook_url)
+            logger.info("Telegram webhook set: %s", webhook_url)
+            return
+        except Exception as exc:
+            logger.exception("Webhook failed, fallback to polling: %s", exc)
+
+    logger.warning("WEBAPP_URL не задан — запускаем polling")
+    await telegram.delete_webhook()
+    _polling_task = asyncio.create_task(telegram.polling_loop())
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    global _polling_task
     init_db()
     settings = get_settings()
 
@@ -45,14 +77,13 @@ async def lifespan(app: FastAPI):
     elif telegram.enabled:
         logger.error("PROXY_URL не задан — Telegram-бот не сможет подключиться к API")
 
-    if telegram.enabled and settings.webapp_url:
-        webhook_url = f"{settings.webapp_url.rstrip('/')}/telegram/webhook"
-        try:
-            await telegram.set_webhook(webhook_url)
-            logger.info("Telegram webhook set: %s", webhook_url)
-        except Exception as exc:
-            logger.exception("Failed to set Telegram webhook: %s", exc)
+    await _start_telegram(settings)
     yield
+
+    if _polling_task:
+        _polling_task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await _polling_task
 
 
 app = FastAPI(title=get_settings().app_name, lifespan=lifespan)
@@ -71,6 +102,25 @@ app.add_middleware(
 @app.get("/api/health")
 async def health():
     return {"ok": True, "service": "novye-tehnologii"}
+
+
+@app.get("/api/health/bot")
+async def health_bot():
+    return await telegram.status()
+
+
+@app.post("/api/admin/bot/setup")
+async def admin_bot_setup(_: None = Depends(require_admin)):
+    settings = get_settings()
+    if not telegram.enabled:
+        raise HTTPException(status_code=400, detail="Бот не настроен")
+    if settings.telegram_mode.strip().lower() == "polling":
+        raise HTTPException(status_code=400, detail="Режим polling — webhook не нужен")
+    if not settings.webapp_url:
+        raise HTTPException(status_code=400, detail="Задайте WEBAPP_URL в переменных Amvera")
+    webhook_url = f"{settings.webapp_url.rstrip('/')}/telegram/webhook"
+    await telegram.set_webhook(webhook_url)
+    return {"ok": True, "webhook_url": webhook_url}
 
 
 @app.post("/api/leads")
