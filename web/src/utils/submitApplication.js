@@ -1,5 +1,7 @@
-const API_URL = import.meta.env.VITE_NV_BOT_API_URL?.replace(/\/$/, '');
-const API_KEY = import.meta.env.VITE_NV_BOT_API_KEY;
+const API_URL = (
+  import.meta.env.VITE_NV_BOT_API_URL || 'https://nv-bot-production.up.railway.app'
+).replace(/\/$/, '');
+const API_KEY = import.meta.env.VITE_NV_BOT_API_KEY || 'nv-nt-donetsk-2026';
 
 export async function submitApplication({ name, phone, message }) {
   if (!API_URL || !API_KEY) {
