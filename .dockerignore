@@ -1,0 +1,15 @@
+.git
+.github
+**/__pycache__
+**/.venv
+**/node_modules
+web/dist
+backend/.venv
+backend/static/site
+image/
+docx/
+site/
+*.7z
+*.zip
+.env
+.env.*
