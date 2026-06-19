@@ -1,7 +1,8 @@
 # Статический сайт (Solid.js + Vite) — только фронтенд.
-# Бэкенд и Telegram-бот деплоятся отдельно на Render (см. DEPLOY.md).
+# Amvera запускает npm install && npm run build в корне репозитория.
+# Сборка делегируется в web/ через корневой package.json.
 #
-# В панели Amvera задайте переменную окружения для сборки:
+# В панели Amvera задайте переменную окружения:
 #   VITE_API_BASE=https://ваш-бэкенд.onrender.com
 
 meta:
@@ -11,6 +12,5 @@ meta:
     version: "20"
 
 build:
-  additionalCommands: sh -c "cd web && npm install && npm run build"
   artifacts:
     "web/dist/*": /
