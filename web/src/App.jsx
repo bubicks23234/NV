@@ -20,7 +20,6 @@ import { ScrollProgress } from './components/ScrollProgress';
 import { StatValue } from './components/StatValue';
 import { SITE } from './data/seo';
 import { isPhoneComplete } from './utils/phoneMask';
-import { submitLead } from './utils/submitLead';
 import './index.css';
 
 const NAV = [
@@ -63,8 +62,6 @@ export default function App() {
   const [menuOpen, setMenuOpen] = createSignal(false);
   const [scrolled, setScrolled] = createSignal(false);
   const [formSent, setFormSent] = createSignal(false);
-  const [formSubmitting, setFormSubmitting] = createSignal(false);
-  const [formError, setFormError] = createSignal('');
   const [name, setName] = createSignal('');
   const [phone, setPhone] = createSignal('');
   const [message, setMessage] = createSignal('');
@@ -96,25 +93,10 @@ export default function App() {
     setLightboxOpen(true);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!isPhoneComplete(phone()) || formSubmitting()) return;
-
-    setFormSubmitting(true);
-    setFormError('');
-
-    try {
-      await submitLead({
-        name: name().trim(),
-        phone: phone().trim(),
-        message: message().trim(),
-      });
-      setFormSent(true);
-    } catch (error) {
-      setFormError(error.message || 'Не удалось отправить заявку');
-    } finally {
-      setFormSubmitting(false);
-    }
+    if (!isPhoneComplete(phone())) return;
+    setFormSent(true);
   };
 
   return (
@@ -402,17 +384,12 @@ export default function App() {
                       value={message}
                       onInput={setMessage}
                     />
-                    <Show when={formError()}>
-                      <p class="text-sm text-red-600" role="alert">
-                        {formError()}
-                      </p>
-                    </Show>
                     <button
                       type="submit"
                       class="form-submit-btn"
-                      disabled={!name().trim() || !isPhoneComplete(phone()) || formSubmitting()}
+                      disabled={!name().trim() || !isPhoneComplete(phone())}
                     >
-                      {formSubmitting() ? 'Отправка…' : 'Отправить заявку'}
+                      Отправить заявку
                     </button>
                   </form>
                 </Show>

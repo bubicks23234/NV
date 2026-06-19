@@ -1,8 +1,0 @@
-{
-  "name": "novye-tehnologii",
-  "private": true,
-  "description": "Корневой package.json для сборки сайта на Amvera (исходники в web/)",
-  "scripts": {
-    "build": "npm install --prefix web && npm run build --prefix web"
-  }
-}

@@ -1,32 +1,14 @@
-# Backend: API заявок + Telegram-бот (без статики сайта).
-# Сайт деплоится отдельно на Amvera (amvera.yml).
-
 services:
   - type: web
-    name: nv-api
-    runtime: docker
-    dockerfilePath: ./backend/Dockerfile
-    dockerContext: ./backend
-    healthCheckPath: /api/health
+    name: novye-tehnologii
+    runtime: static
+    rootDir: web
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
     envVars:
-      - key: WEBAPP_URL
-        fromService:
-          type: web
-          name: nv-api
-          envVarKey: RENDER_EXTERNAL_URL
-      - key: DATA_DIR
-        value: /data
-      - key: PUBLIC_SITE_URL
-        value: https://novye-tehnologii.ru
-      - key: CORS_ORIGINS
-        value: https://novye-tehnologii.ru
-      - key: AI_WEB_SEARCH
-        value: "false"
-      - key: ADMIN_PASSWORD
-        sync: false
-      - key: TELEGRAM_BOT_TOKEN
-        sync: false
-      - key: ADMIN_TELEGRAM_IDS
-        sync: false
-      - key: DEEPSEEK_API_KEY
-        sync: false
+      - key: NODE_VERSION
+        value: 20
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
