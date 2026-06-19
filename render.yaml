@@ -8,6 +8,10 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 20
+      - key: VITE_NV_BOT_API_URL
+        value: https://nvbot.artixxx.site
+      - key: VITE_NV_BOT_API_KEY
+        sync: false
     routes:
       - type: rewrite
         source: /*

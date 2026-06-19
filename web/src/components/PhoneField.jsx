@@ -117,7 +117,6 @@ export function PhoneField(props) {
           name={props.name}
           type="tel"
           inputmode="numeric"
-          pattern="[0-9]*"
           autocomplete="tel"
           required={props.required}
           class="phone-field-input"

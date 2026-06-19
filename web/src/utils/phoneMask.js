@@ -23,6 +23,13 @@ export function isPhoneComplete(digits) {
   return normalizePhoneDigits(digits).length === 10;
 }
 
+/** Формат для отправки на сервер */
+export function formatPhoneForSubmit(digits) {
+  const d = normalizePhoneDigits(digits);
+  if (d.length !== 10) return '';
+  return `+7 (${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6, 8)}-${d.slice(8, 10)}`;
+}
+
 /** Разделяет маску на введённую часть и «скелет» */
 export function splitPhoneMask(digits) {
   const full = formatPhoneMask(digits);

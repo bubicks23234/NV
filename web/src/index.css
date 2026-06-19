@@ -1720,6 +1720,10 @@
     transform: scale(0.99);
   }
 
+  .form-error {
+    @apply text-sm text-red-600 text-center;
+  }
+
   .site-footer {
     @apply bg-gradient-to-br from-primary-dark via-primary to-primary-dark text-white py-10 sm:py-12;
     padding-bottom: max(2rem, env(safe-area-inset-bottom));
