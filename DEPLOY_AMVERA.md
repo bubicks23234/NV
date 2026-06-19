@@ -6,9 +6,9 @@
 
 | Поле | Значение |
 |------|----------|
-| Payload URL | `https://webhook.git.msk0.amvera.ru/github/159190` |
+| Payload URL | URL из панели Amvera → «Ручная настройка» |
 | Content type | `application/json` |
-| Secret | секрет из панели Amvera |
+| Secret | секрет из поля «Секрет» в Amvera |
 | Events | Just the push event |
 
 В панели Amvera на вкладке **Репозиторий** подключите GitHub и укажите ветку `main`.
