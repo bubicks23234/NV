@@ -9,9 +9,9 @@ services:
       - key: NODE_VERSION
         value: 20
       - key: VITE_NV_BOT_API_URL
-        value: https://nvbot.artixxx.site
-      - key: VITE_NV_BOT_API_KEY
         sync: false
+      - key: VITE_NV_BOT_API_KEY
+        value: nv-nt-donetsk-2026
     routes:
       - type: rewrite
         source: /*
