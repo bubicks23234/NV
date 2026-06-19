@@ -77,6 +77,15 @@ async def lifespan(app: FastAPI):
     elif telegram.enabled:
         logger.error("PROXY_URL не задан — Telegram-бот не сможет подключиться к API")
 
+    logger.info(
+        "Config: PORT=%s TOKEN=%s PROXY=%s WEBAPP_URL=%s MODE=%s",
+        os.environ.get("PORT", "80"),
+        "yes" if settings.telegram_bot_token else "NO",
+        "yes" if settings.proxy_enabled else "NO",
+        settings.webapp_url or "NO",
+        settings.telegram_mode,
+    )
+
     await _start_telegram(settings)
     yield
 

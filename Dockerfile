@@ -18,6 +18,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ .
 COPY --from=web-build /web/dist ./static/site
 
-EXPOSE 8000
-ENV PORT=8000
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+EXPOSE 80
+ENV PORT=80
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-80}"]
